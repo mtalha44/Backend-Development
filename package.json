@@ -1,0 +1,18 @@
+{
+  "name": "talha-package",
+  "version": "1.0.0",
+  "description": "Its my project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Talha",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "@angular/cli": "^19.0.7",
+    "express": "^4.21.2"
+  }
+}

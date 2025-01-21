@@ -14,7 +14,15 @@ const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.end('<h1>This is about page</h1>');
     console.log(`Request URL: ${req.url}, Status Code: ${res.statusCode}`);
-  } else {
+  }
+  else if( req.url === '/contact') {
+    res.statusCode = 200;
+const fs = require('fs');
+const data = fs.readFileSync( 'index.html')
+    res.end(data.toString());
+    console.log(`Request URL: ${req.url}, Status Code: ${res.statusCode}`);
+  }
+  else {
     res.statusCode = 404;
     res.end('<h1>Page not found</h1>');
     console.log(`Request URL: ${req.url}, Status Code: ${res.statusCode}`);

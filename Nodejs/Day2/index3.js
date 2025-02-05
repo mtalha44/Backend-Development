@@ -21,10 +21,9 @@
 //     console.log("data is write on it");
 // })
 
-const fs = require('fs');
-const b = fs.writeFileSync( "example.txt" , "Hello Pakistan!" )
-    console.log(b);
-    console.log("Other operations");
+// const fs = require('fs');
+// const b = fs.writeFileSync( "example.txt" , "Hello Pakistan!" )
+// console.log("Other operations");
 
 //to attched content at the end of content of file
 // const fs = require('fs');
@@ -34,4 +33,9 @@ const b = fs.writeFileSync( "example.txt" , "Hello Pakistan!" )
 //     // console.log(err,data);
 // })
 
+// to delete a file
 
+fs.unlink("example.txt" , (err) => {    
+    if(err) throw err;    
+    console.log("file deleted");
+})

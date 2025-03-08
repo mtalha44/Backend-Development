@@ -1,4 +1,4 @@
-// dynamic routing 
+// routing 
 //  how to get data from frontend at backend route 
 // setting parser for form 
 

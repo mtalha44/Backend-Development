@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body class="p-4">
+    <h1 class="text-4xl text-center mb-4">Notepad</h1>
+    <form action="/create-task" method="post" class="max-w-md p-4 border rounded shadow mx-auto">
+        <div class="mb-4">
+            <label for="topic" class="text-2xl block mb-2">Topic</label><br>
+            <input type="text" name="topic" id="topic" class="w-full p-2 border-2 border-green-600 rounded" placeholder="Enter Task Topic"><br>
+        </div>
+        <div class="mb-4">
+            <label for="description" class="mb-2 text-xl block">Description</label><br>
+            <textarea name="description" id="description" resize="none" cols="30" rows="5" class="mb-2 w-full p-2 border rounded" placeholder="Your task description goes here..."></textarea>
+        </div>
+        
+        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Create Task</button>
+    </form>
+
+    <div class="flex flex-wrap gap-[0.8rem] mt-4">
+       <% if(files.length > 0 ){ %>
+            
+            <% files.forEach( (val) => { %>
+                <div class="task border rounded shadow p-4 mx-w-sm mt-4">
+                    <div class="task-name">
+                        <h3 class="bold text-center text-xl"> <%= val %> </h3>
+                    </div>
+                    <div class="task-details mt-2 hidden">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident voluptatem beatae reprehenderit perferendis fuga necessitatibus sunt in, architecto dignissimos consequatur voluptatum labore? Aut mollitia suscipit impedit sequi distinctio corporis cum?
+                    </div>
+                    <a href="/MiniProjects/Project2/task/<%= val %>" class="see-more text-blue-700 cursor-pointer underline bold text-center">See More</a>
+                </div>
+            <% }) %>
+
+        <% } else { %>
+            <h3 class="text-red-700 bold m-4">No task created Yet...</h3>
+            <% } %>
+
+    </div>
+</body>
+</html>
+
+

@@ -35,6 +35,7 @@ app.post('/create-task' , (req , res) => {
         })
 })
 
+
 app.get('/MiniProjects/Project2/task/:files' , (req , res)=>{
     fs.readFile(`./task/${req.params.files}` , "utf-8", (err , filedata) => {
         if(err)
@@ -47,6 +48,57 @@ app.get('/MiniProjects/Project2/task/:files' , (req , res)=>{
         }
     })
 })
+
+app.get('/edit/:filename', (req, res) => {
+    fs.readFile(`./task/${req.params.filename}`, "utf-8", (err, filedata) => {
+      if (err) {
+        console.error("Error reading file:", err);
+        return res.status(500).send("Error reading file");
+      }
+      // Now filedata contains the contents of the file
+    //   console.log(filedata);
+      res.render('edit', { filename: req.params.filename, filedata: filedata });
+    });
+  });
+  
+
+app.post('/edit', (req, res) => {
+    const prevTopic = req.body['prev-topic'];
+    const newTopic = req.body['new-topic'];
+    // const newDescription = req.body['prev-description'];
+  
+    if (!prevTopic || !newTopic) {
+      console.error("Missing previous or new topic");
+      return res.redirect('/');
+    }
+    
+    // Build the full file paths relative to the current directory
+    const oldPath = path.join(__dirname, 'task', prevTopic);
+    const newPath = path.join(__dirname, 'task', newTopic);
+  
+    console.log('Renaming file from:', oldPath);
+    console.log('Renaming file to:', newPath);
+  
+    fs.rename(oldPath, newPath, (err) => {
+      if (err) {
+        console.error("Error renaming file:", err);
+      }
+      res.redirect('/');
+    });
+
+    // for updating description
+
+    // fs.writeFile(`./task/${newTopic}.txt` , newDescription , (err) => {
+    //     if(err){
+    //         console.log(err);
+    //     }
+    //     res.redirect("/");
+    // })
+
+  });
+  
+  
+  
 
 app.listen( port, (err) => {
     if(err){

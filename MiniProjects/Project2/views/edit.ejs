@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body class="p-4">
+    <h1 class="text-4xl text-center mb-4">Notepad</h1>
+    <form action="/edit" method="post" class="max-w-md p-4 border rounded shadow mx-auto">
+        <div class="mb-4">
+            <label for="topic" class="text-2xl block mb-2">Previous Topic Name</label><br>
+            <input type="text" name="prev-topic" id="topic" class="w-full p-2 border-2 border-green-600 rounded" value="<%= filename %>"><br>
+            <label for="topic" class="text-2xl block mb-2">New Topic Name</label><br>
+            <input type="text" name="new-topic" id="topic" class="w-full p-2 border-2 border-green-600 rounded" placeholder="Enter Task Topic"><br>
+        </div>
+        <div class="mb-4">
+            <label for="description" class="mb-2 text-xl block">Description</label><br>
+            <textarea name="prev-description" id="description" resize="none" cols="30" rows="5" class="mb-2 w-full p-2 border rounded" placeholder="Your task description goes here..."><%= filedata %></textarea>
+        </div>
+        
+        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Update Task</button>
+    </form> 
+
+</body>
+</html>
+
+

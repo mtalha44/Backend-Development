@@ -32,7 +32,10 @@
                     <div class="task-details mt-2 hidden">
                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident voluptatem beatae reprehenderit perferendis fuga necessitatibus sunt in, architecto dignissimos consequatur voluptatum labore? Aut mollitia suscipit impedit sequi distinctio corporis cum?
                     </div>
-                    <a href="/MiniProjects/Project2/task/<%= val %>" class="see-more text-blue-700 cursor-pointer underline bold text-center">See More</a>
+                    <div class="flex gap-4">
+                        <a href="/MiniProjects/Project2/task/<%= val %>" class="see-more text-blue-700 cursor-pointer underline bold text-left">See More</a>
+                        <a href="/edit/<%= val %>" class="edit-task text-orange-700 cursor-pointer underline bold text-right">Edit</a>
+                    </div>
                 </div>
             <% }) %>
 

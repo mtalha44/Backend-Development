@@ -1,0 +1,41 @@
+user ko profile denay se pahley ye check karna hota ha 
+key user ha kon . like ali wanna open his profile then
+i will question who you are i ask some details like email , 
+username and then i verify it in database if it available in 
+system then i allow it to check its profile
+
+
+if ali wants to see some products then i ask some details 
+like product name , product price and then i verify it in 
+database if it available in system then i allow it to check
+ products .
+if user wanna change product price then i ask some details 
+and then check that is it authorized person means admin 
+because some task only do by admin
+
+if a request to server it will process and response and if 
+i again send request then it again process means every time 
+it need details like who you are?  
+so that's why use cookies and sessions
+
+if a send a request to server then it will process and ask 
+details like who you are ?
+and then server will generate a string it will store and 
+send it back to the user browser . That will will help 
+beacuse if i again send a request to server then server 
+will process that string then beacuse of that server
+recognze me and didn't ask any details about me . beacuse
+now server know about you beacuse of that string 
+
+we have to learn some different things 
+like 
+how to set cookies 
+how to use bcrypt for password encryption and decryption
+what is jwt and how to store data in jwt and how to
+retrieve it back from jwt
+
+if my paswword is talha@123 i can't save it like that beacuse it can be steal by hacker 
+so it will change into 
+talha@123 => wejlkwjcewrwklwekfwkfenwwkfn
+
+so bcrypt hepls to convert password into taht string

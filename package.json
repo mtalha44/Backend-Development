@@ -2,7 +2,7 @@
   "name": "talha-package",
   "version": "1.0.0",
   "description": "Its my project",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,10 +13,12 @@
   },
   "dependencies": {
     "@angular/cli": "^19.0.7",
+    "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cookie-session": "^2.1.0",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "jokes": "^0.0.2"
+    "jokes": "^0.0.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }

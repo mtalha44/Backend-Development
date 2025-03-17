@@ -1,0 +1,13 @@
+create user account 
+     mongoose
+     schema
+     model
+     usercreate -> password -> hash
+     jwt token -> cookie
+
+     login -> token -> bcrypt -> email 
+
+
+$2b$10$vIAPy2zOZgNR91iKf.5nu5HZlWqtTLd710GCgcOlYS5lfhjxaPW
+
+$2a$10$Gtj21ETvbtBMVzZXsn4gzevBazGSFbVSuZwqwEkVKvu5uOd4f5XWO

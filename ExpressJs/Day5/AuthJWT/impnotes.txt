@@ -36,6 +36,6 @@ retrieve it back from jwt
 
 if my paswword is talha@123 i can't save it like that beacuse it can be steal by hacker 
 so it will change into 
-talha@123 => wejlkwjcewrwklwekfwkfenwwkfn
+talha@123 => $2b$10$Zi.NRxlNm4lw.nwSPI05.O2t.vWgkv472N0p9nEjwYBEIQddrFDfS
 
 so bcrypt hepls to convert password into taht string

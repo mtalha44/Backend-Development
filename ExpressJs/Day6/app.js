@@ -95,7 +95,7 @@ function authenticateToken(req, res, next) {
 // then he can access this route means it can use profile until it 
 // logout or until we set expiry date of token . Means if user sign
 //  up and then after a day he again open a website then instead of
-//  login again or sign up again we use token that store in cookies .
+//  login again or sign up again we use token that store in cookies.
 //  we will use that token to verify user in database and provide
 //  access to it without even getting information again from user 
 
@@ -107,3 +107,5 @@ app.get('/protected' , authenticateToken , (req, res) => {
 app.listen( 3000, () => {
     console.log('chal rha');
 }) 
+const express = require('express');
+const mongoose = require('mongoose');

@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/autPrac');
-
 const userSchema = mongoose.Schema({
     name : { type : String , required : true },
     email : { type : String , required : true , unique : true },
     password : { type : String , required : true },
-    createdAt : { type : Date , default : Date.now }, 
-
+    role : { type : String , default : 'user' },
+    isVerified : { type : Boolean , default : false },
 })
 
-module.exports = mongoose.model('user' , userSchema);
 
+module.exports = mongoose.model( 'user' , userSchema );

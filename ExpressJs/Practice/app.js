@@ -1,26 +1,19 @@
-const express = require('express');
-const app = express();
-require('dotenv').config();
-const connectDB = require('./config/db');
-const authMiddleware = require('./middleware/authMiddleware');
-const userRouter = require('./routes/user');
-const postRouter = require('./routes/post');    
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
-app.use(cors({
-    credentials : true,
-    origin : 'http://localhost:3000'
-}));
-app.use(cookieParser());
+const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended : true}));
-app.use('/user' , userRouter);
-app.use('/post' , postRouter);
-app.get('/' , (req , res) => {  
-    res.send('Hello World!')
-})
-connectDB();
-app.listen(process.env.PORT , () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-})
+app.use(cors());
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.error(err));
+
+app.use("/api/auth", require("./routes/auth"));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

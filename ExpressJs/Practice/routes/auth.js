@@ -1,14 +1,19 @@
+require("dotenv").config({ path: "./secret.env" });
+
 const express = require('express');
+const crypto = require('crypto');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../model/user');
+const userSchema = require('../model/user');
 const nodemailer = require('nodemailer');
 const { body , validationResult } = require('express-validator');
 const authMiddleware = require('../middleware/authMiddleware');
+const roleMiddleware = require("../middleware/roleMiddleware");
 const router = express.Router();
 
 
-router.post('register' , [
+router.post('/register' , [
     body('name').notEmpty().withMessage("Name is required"),
     body('email').isEmail().withMessage("Email is required"),
     body('password').isLength({ min : 6 }).withMessage("Password must be at least 6 characters long")
@@ -19,19 +24,19 @@ router.post('register' , [
     const { name , email , password } = req.body;
 
     try{
-        const user = await User.findOne({ email });
+        const user = await userSchema.findOne({ email });
         if(user) return res.status(400).json({ message : "Email already exists" });
 
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password , salt);
 
-        const newUser = user.create({
+        const newUser = userSchema.create({
             name,
             email,
             password : hash
         });
 
-        await newUser.save();
+        // await newUser.save();
 
         const token = jwt.sign( { email } , process.env.JWT_SECRET , { expiresIn : '1h'} );
         sendVerificationEmail(email , token);
@@ -46,7 +51,7 @@ router.post('register' , [
 router.get('/verify-email/:token' , async ( req , res) => {
     try{
         const decoded = jwt.verify(req.params.token , process.env.JWT_SECRET);
-        await User.findOneAndUpdate({ email : decoded.email } , { isVerified : true });
+        await userSchema.findOneAndUpdate({ email : decoded.email } , { isVerified : true });
 
         res.json({message : "Email verified successfully"});
     }
@@ -55,31 +60,43 @@ router.get('/verify-email/:token' , async ( req , res) => {
     }
 });
 
-const sendVerificationEmail = ( email ,token ) => {
-    const transporter = nodemailer.createTransport({
-        service : 'gmail',
-        auth : {
-            user : process.env.EMAIL,
-            pass : process.env.PASSWORD
-        }
+
+const sendVerificationEmail = async (email, token) => {
+  try {
+    // Create a test account on Ethereal
+    let testAccount = await nodemailer.createTestAccount();
+    
+    // Create a transporter using Ethereal SMTP settings
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false, // false for STARTTLS
+      auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass  // generated ethereal password
+      }
     });
 
+    // Create the email options
     const mailOptions = {
-        from : process.env.EMAIL,
-        to : email,
-        subject : 'Verify your email',
-        text : `Please click on the link to verify your email: http://localhost:3000/verify-email/${token}`
+      from: `"No Reply" <no-reply@example.com>`, // Sender address
+      to: email,  // Recipient's email
+      subject: 'Verify Your Email',
+      text: `Click the link to verify your email: http://localhost:5000/api/auth/verify-email/${token}`,
+      html: `<p>Click <a href="http://localhost:5000/api/auth/verify-email/${token}">here</a> to verify your email.</p>`
     };
 
-    transporter.sendMail(mailOptions , (error , info) => {
-        if(error){
-            console.log(error);
-        }
-        else{
-            console.log('Email sent: ' + info.response);
-        }
-})
-}
+    // Send the email
+    let info = await transporter.sendMail(mailOptions);
+
+    console.log('Verification email sent:', info.response);
+    // Log the preview URL provided by Ethereal
+    console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+  }
+};
+
 
 router.post( '/login' , [
     body("email").isEmail().withMessage("Email is required"),
@@ -91,8 +108,10 @@ router.post( '/login' , [
     const { email , password } = req.body;
 
     try {
-        const user = await User.findOne({ email });
+        const user = await userSchema.findOne({ email });
         if(!user) return res.status(400).json({ message : "User not found" });
+
+        if(!user.isVerified) return res.status(400).json({ message : "Please verify your email" });
 
         const isMatch = await bcrypt.compare( password , user.password);
         if(!isMatch) return res.status(400).json({ message : "Invalid password" });
@@ -104,6 +123,7 @@ router.post( '/login' , [
     }
 })
 
+//for this i have to create a input field to verify that its user or admin
 router.get("/admin" , authMiddleware , (req , res) => {
     if(req.user.role === "admin"){
         res.json({ message : "Welcome admin" });
@@ -112,5 +132,100 @@ router.get("/admin" , authMiddleware , (req , res) => {
         res.status(403).json({ message : "Access denied" });
     }
 })
+
+router.get("/admin/dashboard" , authMiddleware , roleMiddleware("admin") , (req , res) => {
+    res.json({ message : "Welcome admin dashboard" });
+})
+
+router.get("/forgot-password" , async (req  , res) => {
+    res.render("forgot-password");
+})
+
+router.post("/forgot-password" , async(req, res) => {
+    const { email } = req.body;
+
+    try{ 
+        const user = await userSchema.findOne({ email });
+        if(!user) return res.status(400).json({ message : "User not found" });
+
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        user.resetToken = resetToken;
+        user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        sendResetEmail( user.email , resetToken );
+
+        res.json({ message : "Password reset email sent" });
+    }
+    catch(error){
+        res.status(500).json({ error : error.message });
+    }
+})
+
+const sendResetEmail = async (email, token) => {
+    try {
+        // Create a test account on Ethereal
+        let testAccount = await nodemailer.createTestAccount();
+        console.log(token)
+        // Create a transporter using Ethereal SMTP settings
+        let transporter = nodemailer.createTransport({
+          host: 'smtp.ethereal.email',
+          port: 587,
+          secure: false, // false for STARTTLS
+          auth: {
+            user: testAccount.user, // generated ethereal user
+            pass: testAccount.pass  // generated ethereal password
+          }
+        });
+    
+        // Create the email options
+        const mailOptions = {
+          from: `"No Reply" <no-reply@example.com>`, // Sender address
+          to: email,  // Recipient's email
+          subject: 'Password Reset Request',
+          text: `Click the link to Reset your Password: http://localhost:5000/api/auth/reset-password/${token}`,
+          html: `<p>Click <a href="http://localhost:5000/api/auth/reset-password/${token}">here</a> to reset your Password.</p>`
+        };
+    
+        // Send the email
+        let info = await transporter.sendMail(mailOptions);
+    
+        console.log('Reset email sent:', info.response);
+        // Log the preview URL provided by Ethereal
+        console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
+      } catch (error) {
+        console.error('Error sending verification email:', error);
+      }
+  };
+  
+  router.get("/reset-password/:token" , (req , res) => {
+    const { token } = req.params;
+    res.render("reset-password" , { token });
+  })
+  router.post("/reset-password/:token" , async(req , res) => {
+    const { password } = req.body;
+    const { token } = req.params;
+
+    try{
+        const user = await userSchema.findOne({ resetToken : token });
+        if(!user) return res.status(400).json({ message : "Invalid token" });
+
+        const resetTokenExpiration = user.resetTokenExpiration;
+        if(Date.now() > resetTokenExpiration) return res.status(400).json({ message : "Token expired" });
+        
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password , salt);
+
+        user.password = hash;
+        user.resetToken = null;
+        user.resetTokenExpiration = null;
+        await user.save();
+
+        res.json({ message : "Password reset successful" });
+    }
+    catch(error){
+        res.status(500).json({ error : error.message });
+    }
+  })
 
 module.exports = router;

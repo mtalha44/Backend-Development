@@ -10,6 +10,8 @@ const nodemailer = require('nodemailer');
 const { body , validationResult } = require('express-validator');
 const authMiddleware = require('../middleware/authMiddleware');
 const roleMiddleware = require("../middleware/roleMiddleware");
+const { loginLimiter } = require("../middleware/ratelimiter");
+const user = require("../model/user");
 const router = express.Router();
 
 
@@ -98,7 +100,7 @@ const sendVerificationEmail = async (email, token) => {
 };
 
 
-router.post( '/login' , [
+router.post( '/login' , loginLimiter, [
     body("email").isEmail().withMessage("Email is required"),
     body("password").isLength({ min : 6 }).withMessage("Password must be at least 6 characters long"),
 ], async (req , res) => {
@@ -106,15 +108,33 @@ router.post( '/login' , [
     if(!errors.isEmpty()) return res.status(400).json({ errors : errors.array() });
 
     const { email , password } = req.body;
-
+    
     try {
-        const user = await userSchema.findOne({ email });
-        if(!user) return res.status(400).json({ message : "User not found" });
+      const user = await userSchema.findOne({ email });
+      if(!user) return res.status(400).json({ message : "User not found" });
+      
+        if (user.isLocked()) return res.status(403).json({ message : "User is locked" });
 
         if(!user.isVerified) return res.status(400).json({ message : "Please verify your email" });
 
         const isMatch = await bcrypt.compare( password , user.password);
-        if(!isMatch) return res.status(400).json({ message : "Invalid password" });
+        if(!isMatch){
+          user.failedLoginAttempts += 1;
+          console.log(user.failedLoginAttempts)
+          
+          if( user.failedLoginAttempts >=3 ){
+            user.lockUntil = Date.now + 15 * 60 * 1000;
+              await user.save();
+              return res.status(403).json({ message : "User is locked" });
+          }
+          await user.save();
+          return res.status(400).json({ message : "Invalid Credentials" });
+
+        } 
+
+        user.failedLoginAttempts = 0;
+        user.lockUntil = null;
+        await user.save();
 
         const token = jwt.sign({ email } , process.env.JWT_SECRET , { expiresIn : '1h' });
         res.json({ token });

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div class="w-full flex flex-col items-center justify-center  h-screen bg-zinc-900">
+        <h1 class="text-4xl text-white text-center mb-4">Login</h1>
+    <form action="/task/app/login" method="post" class="w-92 px-[2rem] py-[1rem] border rounded-lg shadow-xl shadow-cyan-500/50 bg-white shadow">
+        <div class="mb-3">
+            <label for="email" class="text-xl mb-1 block ">Email</label>
+            <input type="email" name="email" id="email" class="w-full p-2 border-2 border-cyan-500 rounded" placeholder="Enter Email">
+        </div>
+        <div class="mb-[2rem]">
+            <label for="password" class="text-xl mb-1 block ">Password</label>
+            <input type="password" name="password" id="password" class="w-full p-2 border-2 border-cyan-500 rounded">
+        </div>
+        <div class="flex mb-1 justify-center">
+
+            <button type="submit" class="w-full py-2 bg-cyan-500 text-white rounded hover:bg-cyan-900 transition">Login</button>
+        </div>
+    </form>
+        <a href="/task/app/forgot-password" class="text-cyan-500 text-center mt-2  hover:text-cyan-900 transition ">Forgot Password</a>         
+    </div>
+</body>
+</html>

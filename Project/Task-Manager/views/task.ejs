@@ -1,0 +1,54 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="w-full h-full flex flex-col items-center p-16 bg-zinc-900">
+    <h1 class=" text-white text-2xl">Task Manager App</h1>
+    <form action="/task/app/create" method="post" class="w-96  p-10 text-white flex gap-5 flex-wrap">
+      <input type="text" name="username" placeholder="Enter Username" class="w-full p-2 bg-transparent  border rounded" />
+      <input type="text" name="description" placeholder="Enter description" class="w-full p-2 bg-transparent border rounded" />
+      <input type="text" name="imgurl" placeholder="img url" class="w-full p-2 bg-transparent border rounded" />
+      <button class="p-2 border rounded">Create User</button>
+    </form>
+      <a href="/read" class="bg-yellow-200 p-2 border rounded hover:text-yellow-800">Read Data</a>
+  </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager APP</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div class="w-full flex flex-col items-center justify-center  h-screen bg-zinc-900">
+        <h1 class="text-4xl text-white text-center mb-4">Task Manager</h1>
+    <form action="/task/app/create/<%=userId%>" method="post" class="w-92 px-[2rem] py-[1rem] border rounded-lg shadow-xl shadow-cyan-500/50 bg-white shadow">
+        <div class="mb-3">
+            <label for="topic" class="text-xl mb-1 block ">Topic</label>
+            <input type="topic" name="topic" id="topic" class="w-full p-2 border-2  border-cyan-500 rounded" placeholder="Enter topic">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="text-xl mb-1 block ">Description</label>
+            <textarea name="description" id="description" placeholder="Enter task description" rows="5" class="w-full p-2  border-2 border-cyan-500 rounded"></textarea>
+        </div>
+        <div class="flex mb-1 justify-center">  
+            <button type="submit" class="w-full py-2 cursor-pointer bg-cyan-500 text-white rounded hover:bg-cyan-900 transition">Add Task</button>
+        </div>
+        <div>
+            Already have task?
+            <a href="/read" class="text-cyan-500 text-center mt-2  hover:text-cyan-900 transition ">Read Task</a>
+        </div>
+    </form>
+    </div>
+</body>
+</html>

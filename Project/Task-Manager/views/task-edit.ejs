@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <!-- Use the recommended Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-900">
+  <div class="p-5">
+    <a href="/" class="text-blue-800">Go to Back</a>
+  </div>
+  <div class=" flex  flex-wrap justify-around items-center p-16 gap-4 ">
+
+    <div class="profile flex flex-col gap-2 w-72 p-5  border rounded bg-zinc-800">
+      <div class="h-[12rem] border rounded overflow-hidden bg-zinc-500">
+        <img src="<%= prevUser.imgurl %>" class="w-full object-fit object-top" alt="">
+        </div>
+      <div class="info p-2 text-white">
+        <h4 class=""><%=prevUser.username%></h4>
+        <h5 class="text-zinc-500"><%=prevUser.email%></h5>
+      </div>
+      <div class="nav-btns w-full p-2 flex justify-between">
+          <a href="/delete/<%= prevUser._id %>" class="text-red-400 hover:text-red-800">Delete User</a>
+      </div>
+    </div>   
+    <div>
+        <h1 class="text-center text-white text-2xl">Update User</h1>
+    <form action="/update/<%= prevUser._id %>" method="post" class="w-96 m-auto p-10 text-white flex gap-5 flex-wrap">
+      <input type="text" name="username" placeholder="Enter Username" class="w-full p-2 bg-transparent  border rounded" />
+      <input type="text" name="email" placeholder="Enter email" class="w-full p-2 bg-transparent border rounded" />
+      <input type="text" name="imgurl" placeholder="img url" class="w-full p-2 bg-transparent border rounded" />
+      <button class="p-2 border rounded">Update User</button>
+    </form>
+    </div>
+  </div>
+</body>
+</html>

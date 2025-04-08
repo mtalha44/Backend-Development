@@ -9,7 +9,13 @@ const userSchema = mongoose.Schema({
     isVerified : { type : Boolean , default : false },
     resetToken : { type : String , default : null },
     resetTokenExpiration : { type :Date , default : null },
-
+    failedLoginAttempts : { type : Number , default : 0 },
+    lockUntil : { type : Date , default : null },
+    
 })
+
+// userSchema.methods.isLocked= function(){
+//     return !!( this.lockUntil && this.lockUntil > Date.now()) ;
+// }
 
 module.exports = mongoose.model('User' , userSchema);

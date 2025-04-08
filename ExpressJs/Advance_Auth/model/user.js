@@ -11,12 +11,12 @@ const userSchema = mongoose.Schema({
     resetToken : { type : String , default : null },
     resetTokenExpiration : { type :Date , default : null },
     failedLoginAttempts :{ type :Number , default :0 },
-    locakUntil : { type : Date , default :null },
+    lockUntil : { type : Date , default :null },
 })
 
 userSchema.methods.isLocked = function(){
 
-    return !!(this.locakUntil && this.locakUntil > Date.now());
+    return !!(this.lockUntil && this.lockUntil > Date.now());
 }
 
 module.exports = mongoose.model( 'user' , userSchema );

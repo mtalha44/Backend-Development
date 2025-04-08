@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const { body  , validationResult } = require('express-validator');
 const userSchema = require("../models/User");
+const taskSchema = require("../models/Task");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -39,12 +40,38 @@ router.post('/register' ,  [
 
             sendVerificationEmail(email , token);
 
-            res.status(201).json('User created successfully');
+            res.render('task' , { userId : userSchema._id });
+            // res.status(201).json('User created successfully');
         }
         catch(error){
             res.status(500).json({ error : error.message });
         }
 })
+
+router.post('/create/:userId' , [
+  body('topic').notEmpty().withMessage('Topic name can not be empty'),
+  body('description').notEmpty().withMessage('Task description can not be empty'),
+] ,
+    async ( req, res ) => {
+      console.log('chal rha')
+      console.log(req.params.userId)
+      const errors = validationResult(req);
+      if(!errors.isEmpty()) return res.status(400).json({errors : errors.array() });
+
+      const { topic , description } = req.body;
+
+    try{  
+       await taskSchema.create({
+        topic,
+        description,
+        writer : req.params.userId, 
+       })
+    }
+    catch(error){
+      res.status(500).json({ error : error.message });
+    }
+  }
+)
 
 router.post('/login' , [
     body('email').isEmail().withMessage('Email can not be empty'),
@@ -54,14 +81,36 @@ router.post('/login' , [
           const errors = validationResult(req);
           if(!errors.isEmpty()) return res.status(400).json({errors : errors.array()});
           
-
+          
           const { email , password } = req.body;
           try{
             const user = await userSchema.findOne({email});
             if(!user) return res.status(400).json({ message : "Invalid Credentials" });
-
-            const isMatch = bcrypt.compare( password , user.password );
-            if(!isMatch) return res.status(400).json({ message : "Invalid Credentials" });
+            
+            if(user.lockUntil <= Date.now() && user.lockUntil != null ){
+              user.lockUntil = null;
+              user.failedLoginAttempts= 0;
+              user.save();
+              // console.log(user.lockUntil , user.failedLoginAttempts);
+              // return res.status(403).json({ message : "User is locked" });
+            } 
+            if(user.lockUntil > Date.now()){
+              // console.log(user.lockUntil , user.failedLoginAttempts);
+              return res.status(403).json({ message : "User is locked" });
+            }
+            const isMatch = await bcrypt.compare( password , user.password );
+            // console.log(isMatch)   
+            if(!isMatch){
+              user.failedLoginAttempts += 1;
+              // console.log(user.failedLoginAttempts);
+              if( user.failedLoginAttempts >= 3 ){
+                user.lockUntil = Date.now() + 5 * 60 * 1000 ;
+                await user.save();
+                return res.status(403).json({ message : "User is locked" });
+              }
+              await user.save();
+              return res.status(400).json({ message : "Invalid Credentials" });
+            } 
 
             const token = jwt.sign({ email } , process.env.JWT_SECRET , { expiresIn : '1h' });
             
@@ -72,7 +121,8 @@ router.post('/login' , [
             
             res.cookie("token" , token);
 
-            res.status(201).json({message : 'Login Successfully'});
+            res.render('task' , { userId : user._id });
+            // res.status(201).json({message : 'Login Successfully'});
           }
           catch(error){
             res.status(500).json({ error : error.message });
@@ -163,7 +213,6 @@ const sendResetEmail = async (email, token) => {
     try {
         // Create a test account on Ethereal
         let testAccount = await nodemailer.createTestAccount();
-        console.log(token)
         // Create a transporter using Ethereal SMTP settings
         let transporter = nodemailer.createTransport({
           host: 'smtp.ethereal.email',

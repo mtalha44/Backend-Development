@@ -53,8 +53,6 @@ router.post('/create/:userId' , [
   body('description').notEmpty().withMessage('Task description can not be empty'),
 ] ,
     async ( req, res ) => {
-      console.log('chal rha')
-      console.log(req.params.userId)
       const errors = validationResult(req);
       if(!errors.isEmpty()) return res.status(400).json({errors : errors.array() });
 
@@ -66,12 +64,87 @@ router.post('/create/:userId' , [
         description,
         writer : req.params.userId, 
        })
+      
+       console.log('task created successfuly');
+      res.redirect(`/task/app/create/${req.params.userId}`);
     }
     catch(error){
       res.status(500).json({ error : error.message });
     }
   }
 )
+
+router.get('/create/:userId' , async ( req , res ) => {
+  res.render('task' , { userId : req.params.userId }); 
+})
+
+router.get('/read/:userId' , async (req , res) => {
+  try{
+    const userId = req.params.userId;
+    const task = await taskSchema.find({writer : userId});
+    
+    if(!task) return res.status(400).json({ message : "Your are not allowed to access this page!"});
+    
+    res.render('task-read' , { task , userId });
+
+  }   
+  catch(error){
+    res.status(500).json({ error : error.message });
+  }
+
+})
+
+router.get('/edit/:taskId/:userId' , async ( req , res ) => {
+  try{
+    const taskId = req.params.taskId;
+    const userId = req.params.userId;
+    const task = await taskSchema.findOne({ _id : taskId });
+    
+    if(!task) return res.status(400).json({ message : "Your are not allowed to access this page!"});
+    
+    res.render('task-edit' , { prevtopic : task , userId});
+
+  }   
+  catch(error){
+    res.status(500).json({ error : error.message });
+  }
+} )
+
+router.post('/update/:prevTopicId/:userId' , async ( req, res ) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) return res.status(400).json({errors : errors.array() });
+
+  const userId =req.params.userId;
+  const taskId = req.params.prevTopicId;
+
+  const { newtopic , newdescription } = req.body;
+
+      try{
+          await taskSchema.findOneAndUpdate({ _id : taskId } , {
+            topic : newtopic== "" ? topic : newtopic ,
+            description : newdescription == "" ? description : newdescription ,
+          })
+          const task = await taskSchema.find({writer : userId});
+
+          res.render('task-read' , { task , userId });
+      }
+      catch(error){
+        res.status(500).json({ error : error.message });
+      }
+})
+
+router.get('/delete/:taskId/:userId' , async ( req , res ) => {
+  try{
+    const taskId = req.params.taskId;
+    const userId = req.params.userId;
+    await taskSchema.findOneAndDelete({ _id : taskId });
+    const task = await taskSchema.find({writer : userId});
+    res.render('task-read' , { task , userId });
+  }
+  catch(error){
+    res.status(500).json({ error : error.message });
+  }
+})
 
 router.post('/login' , [
     body('email').isEmail().withMessage('Email can not be empty'),

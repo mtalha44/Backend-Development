@@ -1,54 +1,39 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <title>Task Manager App - Create Task</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="w-full h-full flex flex-col items-center p-16 bg-zinc-900">
-    <h1 class=" text-white text-2xl">Task Manager App</h1>
-    <form action="/task/app/create" method="post" class="w-96  p-10 text-white flex gap-5 flex-wrap">
-      <input type="text" name="username" placeholder="Enter Username" class="w-full p-2 bg-transparent  border rounded" />
-      <input type="text" name="description" placeholder="Enter description" class="w-full p-2 bg-transparent border rounded" />
-      <input type="text" name="imgurl" placeholder="img url" class="w-full p-2 bg-transparent border rounded" />
-      <button class="p-2 border rounded">Create User</button>
-    </form>
-      <a href="/read" class="bg-yellow-200 p-2 border rounded hover:text-yellow-800">Read Data</a>
-  </div>
-</body>
-</html> -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager APP</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-</head>
-<body>
-    <div class="w-full flex flex-col items-center justify-center  h-screen bg-zinc-900">
-        <h1 class="text-4xl text-white text-center mb-4">Task Manager</h1>
-    <form action="/task/app/create/<%=userId%>" method="post" class="w-92 px-[2rem] py-[1rem] border rounded-lg shadow-xl shadow-cyan-500/50 bg-white shadow">
-        <div class="mb-3">
-            <label for="topic" class="text-xl mb-1 block ">Topic</label>
-            <input type="topic" name="topic" id="topic" class="w-full p-2 border-2  border-cyan-500 rounded" placeholder="Enter topic">
-        </div>
-        <div class="mb-3">
-            <label for="description" class="text-xl mb-1 block ">Description</label>
-            <textarea name="description" id="description" placeholder="Enter task description" rows="5" class="w-full p-2  border-2 border-cyan-500 rounded"></textarea>
-        </div>
-        <div class="flex mb-1 justify-center">  
-            <button type="submit" class="w-full py-2 cursor-pointer bg-cyan-500 text-white rounded hover:bg-cyan-900 transition">Add Task</button>
+<body class="bg-gradient-to-br from-gray-800 to-gray-900">
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-3xl shadow-2xl  md:px-8 py-4 w-full max-w-sm">
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-5">Add New Task</h1>
+      <form action="/task/app/create/<%= userId %>" method="post" class="space-y-6">
+        <div>
+          <label for="topic" class="block text-lg font-medium text-gray-700">Topic</label>
+          <input type="text" name="topic" id="topic" placeholder="Enter task topic" required
+            class="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:border-cyan-500 focus:ring focus:ring-cyan-200">
         </div>
         <div>
-            Already have task?
-            <a href="/task/app/read/<%=userId%>" class="text-cyan-500 text-center mt-2  hover:text-cyan-900 transition ">Read Task</a>
+          <label for="description" class="block text-lg font-medium text-gray-700">Description</label>
+          <textarea name="description" id="description" rows="5" placeholder="Enter task description" required
+            class="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:border-cyan-500 focus:ring focus:ring-cyan-200"></textarea>
         </div>
-    </form>
+        <button type="submit" 
+          class="w-full py-3 bg-cyan-600 text-white rounded-md text-xl font-semibold hover:bg-cyan-700 transition-colors">
+          Add Task
+        </button>
+      </form>
+      <div class="mt-4 text-center">
+        <p class="text-gray-600">Already have a task?</p>
+        <a href="/task/app/read/<%= userId %>" 
+           class="mt-1 inline-block text-cyan-600 hover:text-cyan-800 font-medium transition">
+          View Tasks
+        </a>
+      </div>
     </div>
+  </div>
 </body>
 </html>

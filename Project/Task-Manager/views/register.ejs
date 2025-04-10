@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager APP</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager App - Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Optional: customize Tailwind config overrides here if needed */
+    /* For example, you may include additional fonts or custom colors */
+  </style>
 </head>
-<body>
-    <div class="w-full flex flex-col items-center justify-center  h-screen bg-zinc-900">
-        <h1 class="text-4xl text-white text-center mb-4">Sign Up</h1>
-    <form action="/task/app/register" method="post" class="w-92 px-[2rem] py-[1rem] border rounded-lg shadow-xl shadow-cyan-500/50 bg-white shadow">
-        <div class="mb-3">
-            <label for="username" class="text-xl mb-1 block ">Name</label>
-            <input type="text" name="username" id="username" class="w-full p-2 border-2  border-cyan-500 rounded" placeholder="Enter name">
-        </div>
-        <div class="mb-3">
-            <label for="email" class="text-xl mb-1 block ">Email</label>
-            <input type="email" name="email" id="email" class="w-full p-2 border-2 border-cyan-500 rounded" placeholder="Enter Email">
-        </div>
-        <div class="mb-[2rem]">
-            <label for="password" class="text-xl mb-1 block ">Password</label>
-            <input type="password" name="password" id="password" class="w-full p-2 border-2 border-cyan-500 rounded">
-        </div>
-        <div class="flex mb-1 justify-center">
-
-            <button type="submit" class="w-full py-2 cursor-pointer bg-cyan-500 text-white rounded hover:bg-cyan-900 transition">Sign Up</button>
+<body class="bg-gradient-to-br from-cyan-700 to-blue-900">
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-3xl shadow-xl md:px-12 py-6 w-full max-w-sm">
+      <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Sign Up</h1>
+      <form action="/task/app/register" method="post" class="space-y-5">
+        <div>
+          <label for="username" class="block text-lg font-medium text-gray-700">Name</label>
+          <input type="text" name="username" id="username" placeholder="Enter your name" class="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:border-cyan-500 focus:ring-cyan-500">
         </div>
         <div>
-            Already have an account?
-            <a href="/login" class="text-cyan-500 text-center mt-2  hover:text-cyan-900 transition ">Login</a>
+          <label for="email" class="block text-lg font-medium text-gray-700">Email</label>
+          <input type="email" name="email" id="email" placeholder="Enter your email" class="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:border-cyan-500 focus:ring-cyan-500">
         </div>
-    </form>
+        <div>
+          <label for="password" class="block text-lg font-medium text-gray-700">Password</label>
+          <input type="password" name="password" id="password" placeholder="Enter a password" class="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:border-cyan-500 focus:ring-cyan-500">
+        </div>
+        <button type="submit" class="w-full bg-cyan-600 text-white py-2 rounded-md text-xl font-semibold hover:bg-cyan-700 transition-colors">Sign Up</button>
+      </form>
+      <p class="mt-6 text-center text-gray-600">
+        Already have an account? 
+        <a href="/task/app/login" class="text-cyan-600 hover:text-cyan-800 font-medium transition-colors">Login here</a>
+      </p>
     </div>
+  </div>
 </body>
 </html>

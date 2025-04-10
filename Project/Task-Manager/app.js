@@ -17,9 +17,6 @@ app.use("/task/app", require("./routes/auth"));
 app.get('/' , (req, res) => {
     res.render('register');
 })
-app.get('/login' , (req, res) => {
-    res.render('login');
-})
 
 app.listen( port , () => {
     console.log(`Server running on this ${port} port`);

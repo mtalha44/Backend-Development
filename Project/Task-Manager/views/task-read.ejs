@@ -3,32 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title>Task Manager - My Tasks</title>
   <link rel="stylesheet" href="/stylesheets/style.css" />
-  <!-- Use the recommended Tailwind CDN -->
+  <!-- Use the official Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-zinc-900">
+  <!-- Navigation / Back Link -->
   <div class="p-5">
-    <a href="/task/app/create/<%=userId%>" class="text-blue-800">Go to Back</a>
+    <a href="/task/app/create/<%= userId %>" class="text-blue-500 hover:text-blue-300 font-semibold">
+      &larr; Go Back
+    </a>
   </div>
-  <div class=" flex  flex-wrap justify-between items-center p-16 gap-4 ">
-    <% if(task.length > 0 ){ %> 
-    <% task.forEach((task) => { %>
-    <div class="profile flex flex-col gap-2 w-72 p-5  border rounded bg-zinc-800">
-      <div class="info p-2 text-white">
-        <h4 class=""><%=task.topic%></h4>
-        <h5 class="text-zinc-500"><%=task.description%></h5>
+
+  <!-- Container for Tasks -->
+  <div class="p-8 max-w-5xl mx-auto">
+    <% if(task.length > 0) { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% task.forEach((task) => { %>
+          <div class="bg-zinc-800 rounded-2xl shadow-lg p-6 flex flex-col justify-between">
+            <div class="mb-4">
+              <h4 class="text-2xl font-bold text-white mb-2"><%= task.topic %></h4>
+              <p class="text-md break-words text-gray-300"><%= task.description %></p>
+            </div>
+            <div class="flex justify-between">
+              <a href="/task/app/edit/<%= task._id %>/<%= userId %>" 
+                 class="text-cyan-400 hover:text-cyan-200 font-medium">
+                Edit Task
+              </a>
+              <a href="/task/app/delete/<%= task._id %>/<%= userId %>" 
+                 class="text-red-500 hover:text-red-300 font-medium">
+                Delete Task
+              </a>
+            </div>
+          </div>
+        <% }); %>
       </div>
-      <div class="nav-btns w-full p-2 flex justify-between">
-          <a href="/task/app/edit/<%=task._id%>/<%=userId%>" class="text-zinc-300 hover:text-white">Edit User</a>
-          <a href="/task/app/delete/<%=task._id%>/<%=userId%>" class="text-red-400 hover:text-red-800">Delete User</a>
+    <% } else { %>
+      <div class="text-center text-white mt-10">
+        <h3 class="text-xl font-semibold">No tasks created yet...</h3>
       </div>
-    </div>   
-      <% } ) %>
-    <% } else{ %>
-        <h3 class="text-white">No User Created Yet....</h3>
-      <%}%>
+    <% } %>
   </div>
 </body>
 </html>

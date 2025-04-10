@@ -40,10 +40,11 @@ router.post('/register' ,  [
 
             sendVerificationEmail(email , token);
 
-            res.render('task' , { userId : userSchema._id });
-            // res.status(201).json('User created successfully');
+            // res.render('task' , { userId : userSchema._id });
+            res.status(201).json('User created successfully');
         }
         catch(error){
+            console.log(error.message)
             res.status(500).json({ error : error.message });
         }
 })
@@ -144,6 +145,10 @@ router.get('/delete/:taskId/:userId' , async ( req , res ) => {
   catch(error){
     res.status(500).json({ error : error.message });
   }
+})
+
+router.get('/login' , async ( req , res ) => {
+  res.render('login');
 })
 
 router.post('/login' , [
